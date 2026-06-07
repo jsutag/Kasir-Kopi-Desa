@@ -179,6 +179,16 @@
                 <thead><tr><th>Nama Bahan</th><th style="text-align: right;">Total Terpakai</th></tr></thead>
                 <tbody id="ingredientsReportBody"></tbody>
             </table>
+            
+            <div class="notes-container" style="margin-top: 32px; border-top: 2px dashed var(--border); padding-top: 24px;">
+                <h3 style="margin-top: 0; color: var(--navy); font-size: 1.2rem;">📝 Catatan Tambahan</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">Gunakan untuk mencatat bahan gagal, praktek, atau info lainnya.</p>
+                <textarea id="dailyNotes" rows="4" placeholder="Contoh: Susu 200ml terbuang karena tumpah..." style="width: 100%; border-radius: 16px; padding: 16px; border: 1px solid var(--border); font-family: 'Outfit', sans-serif; font-size: 1rem; box-sizing: border-box; resize: vertical; margin-bottom: 12px; background: var(--bg-base); outline: none; transition: border-color 0.3s;"></textarea>
+                <div style="display: flex; align-items: center;">
+                    <button onclick="saveNotes()" class="cat-btn" style="background: var(--navy); color: white; border-color: var(--navy); font-weight: 600;">Simpan Catatan</button>
+                    <span id="noteSaveStatus" style="margin-left: 12px; color: var(--green-dark); font-weight: 500; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s;">Tersimpan! ✔️</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -339,6 +349,11 @@
         }
 
         function renderReportTable() {
+            // Load notes
+            const notes = localStorage.getItem('kopiDesa_laporan_notes') || '';
+            const notesEl = document.getElementById('dailyNotes');
+            if (notesEl) notesEl.value = notes;
+
             const tbody = document.getElementById('ingredientsReportBody'); 
             tbody.innerHTML = '';
             let laporanBahan = JSON.parse(localStorage.getItem('kopiDesa_laporan_bahan')) || {}; 
@@ -365,9 +380,20 @@
             });
         }
 
+        function saveNotes() {
+            const notes = document.getElementById('dailyNotes').value;
+            localStorage.setItem('kopiDesa_laporan_notes', notes);
+            const status = document.getElementById('noteSaveStatus');
+            if(status) {
+                status.style.opacity = '1';
+                setTimeout(() => { status.style.opacity = '0'; }, 2000);
+            }
+        }
+
         function resetLaporanBahan() { 
-            if (confirm("Reset data harian? Semua akumulasi pengeluaran bahan hari ini akan dimulai dari 0 lagi.")) { 
+            if (confirm("Reset data harian? Semua akumulasi pengeluaran bahan dan catatan hari ini akan dihapus/dimulai dari 0 lagi.")) { 
                 localStorage.removeItem('kopiDesa_laporan_bahan'); 
+                localStorage.removeItem('kopiDesa_laporan_notes');
                 renderReportTable(); 
             } 
         }

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Kasir & Stok - Kopi Desa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg-base: #F8FAFC; 
+            --card-bg: #FFFFFF; 
+            --navy: #0F172A; 
+            --navy-light: #334155; 
+            --green: #10B981; 
+            --green-dark: #059669;
+            --text-muted: #64748B; 
+            --border: #E2E8F0; 
+            --danger: #EF4444; 
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.03);
+            --shadow-md: 0 8px 16px rgba(0,0,0,0.06);
+            --shadow-float: 0 -10px 40px rgba(0,0,0,0.15);
+        }
+        body { 
+            font-family: 'Outfit', -apple-system, sans-serif; 
+            background-color: var(--bg-base); 
+            color: var(--navy); 
+            margin: 0; 
+            padding: 0; 
+            -webkit-font-smoothing: antialiased;
+        }
+        /* NAVBAR */
+        .nav-bar { 
+            background-color: var(--card-bg); 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 16px; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: var(--shadow-sm); 
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-item { 
+            font-weight: 600; 
+            cursor: pointer; 
+            color: var(--text-muted);
+            padding: 10px 20px; 
+            border-radius: 14px; 
+            transition: all 0.3s ease; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.05rem;
+        }
+        .nav-item:hover { background-color: var(--bg-base); }
+        .nav-item.active { 
+            color: var(--green-dark); 
+            background-color: rgba(16, 185, 129, 0.1); 
+        }
+        /* LAYOUT */
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 24px; box-sizing: border-box; }
+        .pos-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+        /* CATEGORY TABS */
+        .category-tabs { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 16px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .category-tabs::-webkit-scrollbar { display: none; }
+        .cat-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 12px 24px; border-radius: 100px; font-family: 'Outfit', sans-serif; font-weight: 500; font-size: 0.95rem; color: var(--navy-light); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap; box-shadow: var(--shadow-sm); }
+        .cat-btn:hover { border-color: var(--text-muted); transform: translateY(-2px); }
+        .cat-btn.active { background: var(--navy); color: white; border-color: var(--navy); box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2); font-weight: 600; }
+        /* SEARCH */
+        #searchInput { font-family: 'Outfit', sans-serif; font-size: 1rem; width: 100%; padding: 16px 20px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 20px; box-sizing: border-box; background: var(--card-bg); transition: all 0.3s ease; box-shadow: var(--shadow-sm); }
+        #searchInput:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+        /* MENU GRID */
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-top: 8px; padding-bottom: 24px; }
+        .menu-item-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px 16px; text-align: center; cursor: pointer; box-shadow: var(--shadow-sm); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; justify-content: space-between; min-height: 110px; }
+        .menu-item-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: rgba(16, 185, 129, 0.3); }
+        .menu-item-card:active { transform: scale(0.96); }
+        .item-name { font-weight: 600; font-size: 1.05rem; line-height: 1.4; color: var(--navy); }
+        .item-cat-badge { font-size: 0.75rem; color: var(--green-dark); background: rgba(16, 185, 129, 0.1); padding: 6px 12px; border-radius: 100px; margin-top: 12px; align-self: center; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        /* CART SIDEBAR */
+        .cart-sidebar { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow-md); display: flex; flex-direction: column; max-height: calc(100vh - 120px); position: sticky; top: 90px; }
+        .cart-inner { padding: 24px; display: flex; flex-direction: column; height: 100%; box-sizing: border-box; }
+        .cart-header-area { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg-base); padding-bottom: 16px; margin-bottom: 16px; }
+        .cart-title { margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--navy); display: flex; justify-content: space-between; width: 100%; align-items: center; }
+        .cart-items-list { overflow-y: auto; margin-bottom: 24px; flex-grow: 1; }
+        .cart-items-list::-webkit-scrollbar { width: 6px; }
+        .cart-items-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--bg-base); }
+        .cart-item:last-child { border-bottom: none; }
+        .cart-item-name { font-size: 1rem; font-weight: 600; padding-right: 12px; color: var(--navy); line-height: 1.3; }
+        .cart-qty-controls { display: flex; align-items: center; gap: 12px; background: var(--bg-base); padding: 6px; border-radius: 100px; }
+        .qty-btn { background: var(--card-bg); color: var(--navy); border: 1px solid var(--border); width: 32px; height: 32px; border-radius: 50%; font-size: 1.1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: var(--shadow-sm); }
+        .qty-btn:active { transform: scale(0.9); background: var(--border); }
+        .checkout-btn { background: var(--green); color: white; border: none; padding: 18px; border-radius: 16px; font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; cursor: pointer; width: 100%; transition: all 0.2s; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
+        .checkout-btn:hover:not(:disabled) { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .checkout-btn:active:not(:disabled) { transform: translateY(0); }
+        .checkout-btn:disabled { background: var(--bg-base); color: var(--text-muted); border: 1px solid var(--border); cursor: not-allowed; box-shadow: none; transform: none; }
+        .clear-btn { background: #FEF2F2; color: var(--danger); border: 1px solid #FECACA; padding: 14px; border-radius: 16px; font-family: 'Outfit', sans-serif; font-weight: 600; cursor: pointer; width: 100%; margin-bottom: 12px; transition: all 0.2s; }
+        .clear-btn:hover { background: #FEE2E2; border-color: #FCA5A5; }
+        /* REPORT SECTION */
+        .report-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 24px; padding: 32px; box-shadow: var(--shadow-md); }
+        .report-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg-base); padding-bottom: 20px; margin-bottom: 24px; }
+        .report-header h2 { margin: 0; font-size: 1.6rem; color: var(--navy); }
+        .reset-btn { background: #FEF2F2; color: var(--danger); border: 1px solid #FCA5A5; padding: 12px 20px; border-radius: 12px; font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .reset-btn:hover { background: #FEE2E2; }
+        .ingredients-table { width: 100%; border-collapse: collapse; }
+        .ingredients-table th, .ingredients-table td { text-align: left; padding: 16px; border-bottom: 1px solid var(--bg-base); }
+        .ingredients-table th { background-color: var(--bg-base); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; border-radius: 8px 8px 0 0; }
+        .ingredients-table tr:hover td { background-color: rgba(248, 250, 252, 0.5); }
+        .hidden { display: none !important; }
+
+        @media (min-width: 769px) {
+            .hidden-desktop { display: none !important; }
+            .drag-handle { display: none !important; }
+            .cart-sidebar { transform: none !important; }
+        }
+        /* MOBILE OPTIMIZATION */
+        @media (max-width: 768px) { 
+            .nav-bar { padding: 10px; box-shadow: none; border-bottom: 1px solid var(--border); }
+            .nav-item { font-size: 0.95rem; padding: 10px 16px; }
+            .main-container { padding: 16px; padding-bottom: 140px; }
+            .pos-layout { display: flex; flex-direction: column; gap: 16px; } 
+            .menu-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+            /* Bottom Sheet for Cart on Mobile */
+            .cart-sidebar { position: fixed; bottom: 0; left: 0; right: 0; top: auto; z-index: 105; max-height: 85vh; margin: 0; border-radius: 30px 30px 0 0; box-shadow: var(--shadow-float); border: none; transform: translateY(calc(100% - 90px)); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); }
+            .cart-sidebar.expanded { transform: translateY(0); }
+            .cart-inner { padding: 24px 24px 30px 24px; }
+            .drag-handle { width: 100%; height: 24px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: absolute; top: 0; left: 0; z-index: 10; }
+            .drag-handle::after { content: ''; width: 48px; height: 5px; background-color: var(--border); border-radius: 10px; }
+            .cart-header-area { margin-top: 10px; padding-bottom: 12px; cursor: pointer; }
+            .mobile-cart-indicator { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--text-muted); }
+            .cart-sidebar.expanded .mobile-cart-indicator .arrow { transform: rotate(180deg); }
+            .mobile-cart-indicator .arrow { transition: transform 0.3s; display: inline-block; }
+            .report-section { padding: 24px 16px; }
+            .report-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+        <div id="navKasir" class="nav-item active" onclick="switchView('kasir')">🏪 Mesin Kasir</div>
+        <div id="navLaporan" class="nav-item" onclick="switchView('laporan')">📊 Penggunaan Bahan</div>
+    </div>
+    <div class="main-container">
+        <div id="viewKasir" class="pos-layout">
+            <div class="menu-section">
+                <div class="category-tabs" id="mainTabs">
+                    <button class="cat-btn active" onclick="showMainCategory('Minuman', this)">☕ Minuman</button>
+                    <button class="cat-btn" onclick="showMainCategory('Makanan', this)">🍟 Makanan</button>
+                    <button class="cat-btn" onclick="showMainCategory('Based', this)">⚙️ Based</button>
+                </div>
+                <div class="category-tabs" id="subTabs"></div>
+                <input id="searchInput" type="text" placeholder="🔍 Cari menu..." oninput="searchMenu()">
+                <div id="menuGrid" class="menu-grid"></div>
+            </div>
+            <div class="cart-sidebar" id="cartSidebar">
+                <div class="drag-handle" onclick="toggleCart()"></div>
+                <div class="cart-inner">
+                    <div class="cart-header-area" onclick="toggleCart()">
+                        <h3 class="cart-title">
+                            Pesanan Aktif 
+                            <div class="mobile-cart-indicator hidden-desktop"><span id="cartCountBadge">0 item</span> <span class="arrow">▲</span></div>
+                        </h3>
+                    </div>
+                    <div id="cartItemsList" class="cart-items-list"></div>
+                    <button onclick="clearCart()" class="clear-btn">🗑 Kosongkan Keranjang</button>
+                    <button id="btnCheckout" class="checkout-btn" onclick="prosesCheckout()" disabled>PROSES PESANAN</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="viewLaporan" class="report-section hidden">
+            <div class="report-header">
+                <h2>Akumulasi Pemakaian Bahan</h2>
+                <button class="reset-btn" onclick="resetLaporanBahan()">🔄 Reset / Mulai Hari Baru</button>
+            </div>
+            <table class="ingredients-table">
+                <thead><tr><th>Nama Bahan</th><th style="text-align: right;">Total Terpakai</th></tr></thead>
+                <tbody id="ingredientsReportBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    
+    <script>
+        let cart = []; 
+        const allItems = recipes;
+        let currentMainCategory='Minuman';
+        let currentSubCategory='All'; 
+
+        function showMainCategory(category, btn){
+            document.querySelectorAll('#mainTabs .cat-btn').forEach(b=>b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            currentMainCategory=category;
+            const sub=document.getElementById('subTabs');
+
+            if(category==='Minuman'){
+                sub.innerHTML=`<button class="cat-btn active" onclick="filterSub('All', this)">Semua</button>
+                <button class="cat-btn" onclick="filterSub('Es Kopi', this)">Es Kopi</button>
+                <button class="cat-btn" onclick="filterSub('Hot Coffee', this)">Hot Coffee</button>
+                <button class="cat-btn" onclick="filterSub('Coffee Reguler', this)">Coffee Reguler</button>
+                <button class="cat-btn" onclick="filterSub('Non Coffee', this)">Non Coffee</button>
+                <button class="cat-btn" onclick="filterSub('Teh', this)">Teh</button>
+                <button class="cat-btn" onclick="filterSub('Softdrink', this)">Softdrink</button>
+                <button class="cat-btn" onclick="filterSub('Additional', this)">Additional</button>`;
+                renderMenuGrid(allItems.filter(i=>i.kategori!=='Makanan' && i.kategori!=='Based'));
+            }else if(category==='Makanan'){
+                sub.innerHTML=`<button class="cat-btn active" onclick="filterSub('All Makanan', this)">Semua</button>
+                <button class="cat-btn" onclick="filterSub('Cemilan', this)">Cemilan</button>
+                <button class="cat-btn" onclick="filterSub('Indomie', this)">Indomie</button>`;
+                renderMenuGrid(allItems.filter(i=>i.kategori==='Makanan'));
+            }else{
+                sub.innerHTML='';
+                renderMenuGrid(allItems.filter(i=>i.kategori==='Based'));
+            }
+        }
+
+        function filterSub(category, btn){
+            document.querySelectorAll('#subTabs .cat-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            currentSubCategory=category;
+            if(category==='All'){
+                renderMenuGrid(allItems.filter(i=>i.kategori!=='Makanan' && i.kategori!=='Based'));
+            }else if(category==='All Makanan'){
+                renderMenuGrid(allItems.filter(i=>i.kategori==='Makanan'));
+            }else{
+                renderMenuGrid(allItems.filter(i=>i.kategori===category || i.sub_kategori===category));
+            }
+        }
+
+        function searchMenu(){
+            const q=document.getElementById('searchInput').value.toLowerCase();
+            const cards=allItems.filter(i=>i.nama.toLowerCase().includes(q));
+            renderMenuGrid(cards);
+        }
+
+        function clearCart(){
+            if(confirm('Kosongkan semua pesanan?')){
+                cart=[];
+                renderCart();
+            }
+        }
+
+        function renderMenuGrid(items) {
+            const grid = document.getElementById('menuGrid'); 
+            grid.innerHTML = '';
+            items.forEach(function(item) {
+                const card = document.createElement('div'); 
+                card.className = 'menu-item-card'; 
+                card.onclick = function() { addToCart(item); };
+                card.innerHTML = '<div class="item-name">' + item.nama + '</div><div class="item-cat-badge">' + item.kategori + '</div>';
+                grid.appendChild(card);
+            });
+        }
+
+        function addToCart(menuItem) {
+            const existing = cart.find(function(c) { return String(c.id) === String(menuItem.id); });
+            if (existing) { 
+                existing.qty++; 
+            } else { 
+                cart.push({
+                    id: menuItem.id,
+                    nama: menuItem.nama,
+                    kategori: menuItem.kategori,
+                    bahan: menuItem.bahan,
+                    qty: 1
+                }); 
+            }
+            renderCart();
+        }
+
+        function updateQty(id, change) {
+            const item = cart.find(function(c) { return String(c.id) === String(id); });
+            if (item) { 
+                item.qty += change; 
+                if (item.qty <= 0) {
+                    cart = cart.filter(function(c) { return String(c.id) !== String(id); });
+                }
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cartItemsList'); 
+            const btn = document.getElementById('btnCheckout'); 
+            const badge = document.getElementById('cartCountBadge');
+            
+            list.innerHTML = '';
+            
+            let totalItems = 0;
+            cart.forEach(c => totalItems += c.qty);
+            if (badge) badge.innerText = totalItems + ' item';
+            
+            if (cart.length === 0) { 
+                list.innerHTML = '<p style="color:var(--text-muted); text-align:center; margin-top:40px; font-weight:500;">Belum ada pesanan.</p>'; 
+                btn.disabled = true; 
+                return; 
+            }
+            
+            cart.forEach(function(item) {
+                const div = document.createElement('div'); 
+                div.className = 'cart-item';
+                div.innerHTML = '<div class="cart-item-name">' + item.nama + '</div>' + 
+                                '<div class="cart-qty-controls">' +
+                                '<button class="qty-btn" onclick="updateQty(\'' + item.id + '\', -1)">-</button>' +
+                                '<span style="font-weight:600; width: 16px; text-align: center;">' + item.qty + '</span>' +
+                                '<button class="qty-btn" onclick="updateQty(\'' + item.id + '\', 1)">+</button>' +
+                                '</div>';
+                list.appendChild(div);
+            });
+            btn.disabled = false;
+        }
+
+        function prosesCheckout() {
+            let log = JSON.parse(localStorage.getItem('kopiDesa_laporan_bahan')) || {};
+            cart.forEach(c => {
+                c.bahan.forEach(b => {
+                    const m = b.match(/(\d+([.,]\d+)?)\s*([a-zA-Z]+)/);
+                    if (m) {
+                        const qty = parseFloat(m[1].replace(',', '.')) * c.qty;
+                        const key = b.replace(m[1], '').trim().toLowerCase();
+                        log[key] = (log[key] || 0) + qty;
+                    }
+                });
+            });
+            localStorage.setItem('kopiDesa_laporan_bahan', JSON.stringify(log));
+            cart = []; 
+            renderCart(); 
+            
+            // Auto close cart sidebar on mobile after checkout
+            const sidebar = document.getElementById('cartSidebar');
+            if (sidebar && sidebar.classList.contains('expanded')) {
+                sidebar.classList.remove('expanded');
+            }
+            
+            alert("Pesanan berhasil diproses!");
+        }
+
+        function renderReportTable() {
+            const tbody = document.getElementById('ingredientsReportBody'); 
+            tbody.innerHTML = '';
+            let laporanBahan = JSON.parse(localStorage.getItem('kopiDesa_laporan_bahan')) || {}; 
+            const keys = Object.keys(laporanBahan);
+            
+            if (keys.length === 0) { 
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:var(--text-muted); font-weight:500;">Belum ada pemakaian bahan hari ini.</td></tr>'; 
+                return; 
+            }
+            
+            keys.forEach(function(key) {
+                const parts = key.split(' ');
+                const unit = parts.pop(); 
+                const nameRaw = parts.join(' '); 
+                
+                const name = nameRaw.charAt(0).toUpperCase() + nameRaw.slice(1);
+                const total = Number(laporanBahan[key].toFixed(2));
+                
+                const row = '<tr>' +
+                                '<td><strong>' + name + '</strong></td>' +
+                                '<td style="text-align: right; font-weight: 700; color: var(--green-dark); font-size: 1.1rem;">' + total + ' <span style="font-size:0.9rem; color:var(--text-muted); font-weight:500;">' + unit + '</span></td>' +
+                            '</tr>';
+                tbody.innerHTML += row;
+            });
+        }
+
+        function resetLaporanBahan() { 
+            if (confirm("Reset data harian? Semua akumulasi pengeluaran bahan hari ini akan dimulai dari 0 lagi.")) { 
+                localStorage.removeItem('kopiDesa_laporan_bahan'); 
+                renderReportTable(); 
+            } 
+        }
+
+        function switchView(view) {
+            document.querySelectorAll('.nav-item').forEach(function(i) { i.classList.remove('active'); });
+            if (view === 'kasir') {
+                document.getElementById('navKasir').classList.add('active'); 
+                document.getElementById('viewKasir').classList.remove('hidden'); 
+                document.getElementById('viewLaporan').classList.add('hidden');
+            } else {
+                document.getElementById('navLaporan').classList.add('active'); 
+                document.getElementById('viewKasir').classList.add('hidden'); 
+                document.getElementById('viewLaporan').classList.remove('hidden'); 
+                renderReportTable();
+            }
+        }
+        
+        // Mobile Cart Toggle
+        function toggleCart() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('cartSidebar').classList.toggle('expanded');
+            }
+        }
+
+        // Init
+        showMainCategory('Minuman', document.querySelector('#mainTabs .cat-btn'));
+        renderCart();
+    </script>
+</body>
+</html>

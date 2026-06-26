@@ -59,11 +59,11 @@ const recipes = [
     {id: 11, nama: "Hot Matcha Latte", kategori: "Non Coffee", metode: "Free Pouring", peralatan: ["Timbangan"], bahan: ["Matcha powder 15 g", "Air panas 30 ml", "Vanilla syrup 10 ml", "Fresh milk 150 ml"], step: ["Larutkan matcha", "Tuangkan susu 150 ml"], shelf_life: "", catatan: ""},
     {id: 12, nama: "Ice Matcha Latte", kategori: "Non Coffee", metode: "Layering", peralatan: ["Timbangan"], bahan: ["Matcha powder 20 g", "Air panas 30 ml", "Vanilla syrup 15 ml", "Based cream 150 ml", "Es batu 150 g"], step: ["Larutkan matcha", "Campur bahan", "Tuang es 150 g"], shelf_life: "", catatan: ""},
     {id: 50, nama: "Ice Matcha Latte Premium", kategori: "Non Coffee", metode: "Layering", peralatan: ["Timbangan"], bahan: ["Matcha powder Premium 5 g", "Air panas 40 ml", "Vanilla syrup 15 ml", "Fresh milk 150 ml", "Es batu 150 g"], step: ["Larutkan matcha", "Campur bahan", "Tuang es 150 g"], shelf_life: "", catatan: ""},
-    {id: 14, nama: "Ice Blue Ocean", kategori: "Non Coffee", metode: "Free Pouring", peralatan: ["Timbangan"], bahan: ["Yoghurt 30 ml", "Blue curacao syrup 20 ml", "Salted caramel syrup 15 ml", "Es batu 150 g", "Fresh milk 100 ml", "Popping boba mango 20 g"], step: ["Campur semua bahan", "Tuang es 150 g"], shelf_life: "", catatan: ""},
+    {id: 14, nama: "Ice Blue Ocean", kategori: "Non Coffee", metode: "Free Pouring", peralatan: ["Timbangan"], bahan: ["Yoghurt 30 ml", "Blue curacao syrup 20 ml", "Salted caramel syrup 15 ml", "Es batu 150 g", "Fresh milk 100 ml"], step: ["Campur semua bahan", "Tuang es 150 g"], shelf_life: "", catatan: ""},
     {id: 15, nama: "Ice Lyche Tea", kategori: "Non Coffee", metode: "Free Pouring", peralatan: ["Timbangan"], bahan: ["Lyche syrup 30 ml", "Vanilla black tea 120 ml", "Es batu 150 g", "Buah lyche 2 pcs"], step: ["Campur teh & syrup", "Tuang es 150 g"], shelf_life: "", catatan: ""},
     {id: 16, nama: "Strawberry Fragaria Hot Tea", kategori: "Non Coffee", metode: "Free Pouring", peralatan: ["Timbangan"], bahan: ["Tea bag strawberry fragaria 1 pcs", "Air panas 250 ml"], step: ["Masukan teh", "Tuangkan air panas 250 ml"], shelf_life: "", catatan: ""},
     {id: 17, nama: "Jasmine Orchard Hot Tea", kategori: "Non Coffee", metode: "Free Pouring", peralatan: ["Timbangan"], bahan: ["Tea bag jasmine orchard 1 pcs", "Air panas 200 ml"], step: ["Masukan teh", "Tuangkan air panas 200 ml"], shelf_life: "", catatan: ""},
-    {id: 18, nama: "Honey Lemon Tea", kategori: "Non Coffee", metode: "Stirring", peralatan: ["Timbangan"], bahan: ["Honey syrup 10 ml", "Lemon syrup 20 ml", "Gula cair 10 ml", "Vanilla black tea 120 ml", "Rainbow jelly 20 g", "Ice cube 150 g", "Dry lemon 1 pcs"], step: ["Campur semua bahan", "Tuang es 150 g"], shelf_life: "", catatan: ""},
+    {id: 18, nama: "Honey Lemon Tea", kategori: "Non Coffee", metode: "Stirring", peralatan: ["Timbangan"], bahan: ["Honey syrup 10 ml", "Lemon syrup 20 ml", "Gula cair 10 ml", "Vanilla black tea 120 ml", "Ice cube 150 g", "Dry lemon 1 pcs"], step: ["Campur semua bahan", "Tuang es 150 g"], shelf_life: "", catatan: ""},
     {id: 24, nama: "Black Essentials Hot Tea", kategori: "Non Coffee", metode: "Free Pouring", peralatan: ["Timbangan"], bahan: ["Tea bag black essentials 1 pcs", "Air panas 250 ml"], step: ["Masukan teh", "Tuangkan air panas 250 ml"], shelf_life: "", catatan: ""},
 
 {
@@ -178,6 +178,15 @@ const recipes = [
         "Coffee jelly 20 g"
     ]
 },
+    {
+id: 200,
+    nama: "Popping boba manggo",
+    kategori: "Additional",
+    bahan: [
+        "Popping boba mango 20 g"
+    ]
+},
+   
 
 {
     id: 130,
